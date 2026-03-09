@@ -23,6 +23,25 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
 
+## Calidad backend (tests + linter)
+
+Desde la raiz del proyecto:
+
+```bash
+./run_quality_checks.sh
+```
+
+O manualmente:
+
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-dev.txt
+pytest
+flake8 app tests
+```
+
 ## Ejecutar frontend
 
 ```bash
