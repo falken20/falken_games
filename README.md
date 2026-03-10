@@ -15,12 +15,20 @@ App web con backend en Python (FastAPI) y frontend en Vue 3. Incluye 5 juegos se
 
 ## Ejecutar backend
 
+Desde la raiz del proyecto:
+
+```bash
+./run_api.sh
+```
+
+O manualmente:
+
 ```bash
 cd backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+python -m uvicorn app.main:app --reload --port 8000
 ```
 
 ## Calidad backend (tests + linter)
