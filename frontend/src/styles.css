@@ -14,6 +14,10 @@ body {
   min-height: 100vh;
 }
 
+#app {
+  min-height: 100vh;
+}
+
 button {
   border: none;
   border-radius: 8px;
@@ -49,6 +53,7 @@ button:hover {
   align-items: center;
   gap: 10px;
   margin: 20px 0;
+  flex-wrap: wrap;
 }
 
 .player-form input {
@@ -65,7 +70,7 @@ button:hover {
 
 .game-menu {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 
@@ -113,6 +118,7 @@ button:hover {
   gap: 12px;
   align-items: start;
   margin-bottom: 12px;
+  flex-wrap: wrap;
 }
 
 .play-toolbar h2 {
@@ -153,6 +159,12 @@ button:hover {
   flex-wrap: wrap;
 }
 
+.mobile-hint {
+  margin: 0;
+  color: #334155;
+  font-size: 0.95rem;
+}
+
 .score-msg {
   margin-top: 10px;
   color: #166534;
@@ -178,7 +190,52 @@ button:hover {
 }
 
 @media (max-width: 920px) {
+  .app-root {
+    padding: 18px 14px 24px;
+  }
+
   .play-view {
+    grid-template-columns: 1fr;
+  }
+
+  .score-panel {
+    order: -1;
+  }
+}
+
+@media (max-width: 640px) {
+  button {
+    min-height: 42px;
+  }
+
+  .player-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .player-form input {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .game-menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .play-main,
+  .score-panel {
+    padding: 12px;
+  }
+
+  .top-header p,
+  .play-toolbar p,
+  .mobile-hint {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 460px) {
+  .game-menu {
     grid-template-columns: 1fr;
   }
 }

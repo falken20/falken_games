@@ -155,4 +155,14 @@ restart();
   color: #166534;
   font-weight: 600;
 }
+
+@media (max-width: 520px) {
+  .memory-grid {
+    gap: 8px;
+  }
+
+  .memory-card {
+    font-size: 1.25rem;
+  }
+}
 </style>

@@ -127,6 +127,21 @@ function handleKeyup(event) {
   if (event.key === "ArrowRight") keys.right = false;
 }
 
+function pressLeft() {
+  keys.left = true;
+  keys.right = false;
+}
+
+function pressRight() {
+  keys.right = true;
+  keys.left = false;
+}
+
+function releaseTouchControls() {
+  keys.left = false;
+  keys.right = false;
+}
+
 onMounted(() => {
   window.addEventListener("keydown", handleKeydown);
   window.addEventListener("keyup", handleKeyup);
@@ -154,7 +169,30 @@ onBeforeUnmount(() => {
       <span>Move with Left / Right arrows</span>
     </div>
 
-    <canvas ref="canvasRef" :width="WIDTH" :height="HEIGHT" class="pong-canvas" />
+    <div class="touch-controls" aria-label="Pong touch controls">
+      <button
+        @touchstart.prevent="pressLeft"
+        @touchend.prevent="releaseTouchControls"
+        @mousedown.prevent="pressLeft"
+        @mouseup.prevent="releaseTouchControls"
+        @mouseleave.prevent="releaseTouchControls"
+      >
+        Move Left
+      </button>
+      <button
+        @touchstart.prevent="pressRight"
+        @touchend.prevent="releaseTouchControls"
+        @mousedown.prevent="pressRight"
+        @mouseup.prevent="releaseTouchControls"
+        @mouseleave.prevent="releaseTouchControls"
+      >
+        Move Right
+      </button>
+    </div>
+
+    <div class="pong-canvas-wrap">
+      <canvas ref="canvasRef" :width="WIDTH" :height="HEIGHT" class="pong-canvas" />
+    </div>
 
     <p v-if="gameOver" class="status-msg">Game over. Press Start to try again.</p>
   </section>
@@ -162,14 +200,37 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .pong-canvas {
-  width: min(94vw, 520px);
+  width: 100%;
+  max-width: 520px;
   border-radius: 10px;
   border: 2px solid #1f2937;
   background: #0b1220;
+  display: block;
 }
 
 .status-msg {
   color: #b91c1c;
   font-weight: 600;
+}
+
+.pong-canvas-wrap {
+  width: min(94vw, 520px);
+}
+
+.touch-controls {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: min(94vw, 520px);
+}
+
+@media (max-width: 820px) {
+  .touch-controls {
+    display: grid;
+  }
+
+  .touch-controls button {
+    min-height: 44px;
+  }
 }
 </style>

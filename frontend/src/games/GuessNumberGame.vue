@@ -95,4 +95,15 @@ input {
   font-weight: 600;
   color: #0f172a;
 }
+
+@media (max-width: 520px) {
+  .guess-input-row {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  input {
+    width: 100%;
+  }
+}
 </style>

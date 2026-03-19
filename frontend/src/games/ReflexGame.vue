@@ -152,4 +152,17 @@ onBeforeUnmount(() => {
   margin: 0;
   list-style: none;
 }
+
+@media (max-width: 520px) {
+  .reaction-area {
+    min-height: 150px;
+    font-size: 1rem;
+    padding: 16px;
+  }
+
+  .times-list {
+    gap: 8px;
+    font-size: 0.95rem;
+  }
+}
 </style>

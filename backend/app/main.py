@@ -49,6 +49,12 @@ GAMES = [
         "description": "Haz click en el momento exacto para medir tu reaccion.",
         "controls": "Click/Tap",
     },
+    {
+        "id": "sharp-eye",
+        "name": "Agudeza Visual",
+        "description": "Detecta el cuadro de color distinto antes de que suba la dificultad.",
+        "controls": "Click/Tap",
+    },
 ]
 
 GAME_IDS = {game["id"] for game in GAMES}

@@ -6,6 +6,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKEND_DIR="$ROOT_DIR/backend"
 VENV_PYTEST="$BACKEND_DIR/.venv/bin/pytest"
 VENV_FLAKE8="$BACKEND_DIR/.venv/bin/flake8"
+VENV_COV="$BACKEND_DIR/.venv/bin/coverage"
 
 if [[ ! -d "$BACKEND_DIR" ]]; then
   echo "No se encontro el directorio backend en: $BACKEND_DIR"
@@ -43,13 +44,13 @@ echo
 
 pushd "$BACKEND_DIR" >/dev/null || exit 1
 
-echo "==> Ejecutando tests unitarios (pytest)"
-"$PYTEST_CMD" -rs
+echo "==> Ejecutando tests unitarios con cobertura (pytest + pytest-cov)"
+"$PYTEST_CMD" -rs --cov=app --cov-report=term-missing
 TEST_EXIT=$?
 echo
 
-echo "==> Ejecutando linter (flake8)"
-"$FLAKE8_CMD" app tests
+echo "==> Linter (flake8)"
+"$FLAKE8_CMD" --format='%(path)s:%(row)d:%(col)d: %(code)s %(text)s' app tests
 LINT_EXIT=$?
 echo
 
@@ -63,9 +64,9 @@ else
 fi
 
 if [[ $LINT_EXIT -eq 0 ]]; then
-  echo "  [OK] Linter"
+  echo "  [OK] Linter (sin errores)"
 else
-  echo "  [FAIL:$LINT_EXIT] Linter"
+  echo "  [FAIL:$LINT_EXIT] Linter (revisa errores arriba)"
 fi
 
 if [[ $TEST_EXIT -ne 0 || $LINT_EXIT -ne 0 ]]; then

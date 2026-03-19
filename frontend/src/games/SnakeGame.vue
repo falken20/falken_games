@@ -128,6 +128,12 @@ function handleKeydown(event) {
   nextDirection.value = mapped;
 }
 
+function setDirection(mapped) {
+  if (!running.value) return;
+  if (isOpposite(mapped, direction.value)) return;
+  nextDirection.value = mapped;
+}
+
 function cellClass(cell) {
   if (food.value.x === cell.x && food.value.y === cell.y) {
     return "food";
@@ -162,6 +168,15 @@ onBeforeUnmount(() => {
     <div class="controls-row">
       <button @click="startGame">{{ running ? "Restart" : "Start" }}</button>
       <span>Use arrow keys</span>
+    </div>
+
+    <div class="touch-pad" aria-label="Snake touch controls">
+      <button @click="setDirection('up')">Up</button>
+      <div class="touch-pad-row">
+        <button @click="setDirection('left')">Left</button>
+        <button @click="setDirection('down')">Down</button>
+        <button @click="setDirection('right')">Right</button>
+      </div>
     </div>
 
     <div class="snake-grid">
@@ -209,5 +224,26 @@ onBeforeUnmount(() => {
 .status-msg {
   color: #b91c1c;
   font-weight: 600;
+}
+
+.touch-pad {
+  display: none;
+  gap: 8px;
+}
+
+.touch-pad-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+@media (max-width: 820px) {
+  .touch-pad {
+    display: grid;
+  }
+
+  .touch-pad button {
+    min-height: 42px;
+  }
 }
 </style>

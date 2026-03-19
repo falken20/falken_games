@@ -10,7 +10,7 @@ def test_games_returns_expected_catalog(client) -> None:
 
     assert response.status_code == 200
     game_ids = {item["id"] for item in response.json()}
-    assert game_ids == {"snake", "pong", "memory", "guess-number", "reflex"}
+    assert game_ids == {"snake", "pong", "memory", "guess-number", "reflex", "sharp-eye"}
 
 
 def test_get_scores_with_invalid_game_returns_404(client) -> None:

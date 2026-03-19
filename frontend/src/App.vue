@@ -4,6 +4,7 @@ import GuessNumberGame from "./games/GuessNumberGame.vue";
 import MemoryGame from "./games/MemoryGame.vue";
 import PongGame from "./games/PongGame.vue";
 import ReflexGame from "./games/ReflexGame.vue";
+import SharpEyeGame from "./games/SharpEyeGame.vue";
 import SnakeGame from "./games/SnakeGame.vue";
 import { fetchGames, fetchScores, saveScore } from "./services/api";
 
@@ -12,7 +13,8 @@ const componentMap = {
   pong: PongGame,
   memory: MemoryGame,
   "guess-number": GuessNumberGame,
-  reflex: ReflexGame
+  reflex: ReflexGame,
+  "sharp-eye": SharpEyeGame
 };
 
 const fallbackGames = [
@@ -45,6 +47,12 @@ const fallbackGames = [
     name: "Reflejos",
     description: "React quickly when the color turns green.",
     controls: "Click"
+  },
+  {
+    id: "sharp-eye",
+    name: "Agudeza Visual",
+    description: "Find the tile with a slightly different color before each round gets harder.",
+    controls: "Click/Tap"
   }
 ];
 
@@ -125,7 +133,7 @@ onMounted(loadGames);
   <main class="app-root">
     <header class="top-header">
       <h1>Falken Games</h1>
-      <p>5 mini-games, single player, browser-based</p>
+      <p>6 mini-games, single player, browser-based</p>
     </header>
 
     <section v-if="!selectedGameId" class="menu-view">
@@ -154,6 +162,7 @@ onMounted(loadGames);
           <div>
             <h2>{{ activeGame.name }}</h2>
             <p>Controls: {{ activeGame.controls }}</p>
+            <p class="mobile-hint">On mobile, use the on-screen controls when available.</p>
           </div>
         </div>
 
