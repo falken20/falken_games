@@ -71,8 +71,8 @@ jobs:
           with open('README.md', 'w', encoding='utf-8') as f:
               f.write(content)
           
-            print(f"Updated release badge to {version}")
-            print(f"Updated coverage badge to {coverage_pct}%")
+          print(f"Updated release badge to {version}")
+          print(f"Updated coverage badge to {coverage_pct}%")
           EOF
 
       - name: Commit and push badge updates
