@@ -12,7 +12,7 @@ Plataforma de juegos web fullstack con backend en Python (FastAPI) y frontend en
 	<img src="https://img.shields.io/static/v1?label=node&message=16%2B&color=green&logo=node.js&logoColor=white" alt="Node version"/>&nbsp;
 	<img src="https://img.shields.io/badge/release-1.0.0-blue" alt="Release version"/>&nbsp;
 	<img src="https://img.shields.io/github/actions/workflow/status/falken20/falken_games/quality.yml?branch=master&label=ci" alt="CI status"/>&nbsp;
-	<img src="https://img.shields.io/badge/coverage-87%25-green" alt="Test coverage"/>
+	<img src="https://img.shields.io/badge/coverage-100%25-green" alt="Test coverage"/>
 </p>
 
 </div>

@@ -1,5 +1,8 @@
 name: Quality Checks
 
+permissions:
+  contents: write
+
 on:
   push:
   pull_request:
@@ -40,16 +43,25 @@ jobs:
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: |
           cd ..
-          coverage_pct=${{ steps.coverage.outputs.coverage_pct }}
-          
-          # Update coverage badge in README
+
+          # Update release and coverage badges in README
           python3 << EOF
           import re
+          from urllib.parse import quote
           
           with open('README.md', 'r', encoding='utf-8') as f:
               content = f.read()
+
+          with open('VERSION', 'r', encoding='utf-8') as f:
+            version = f.read().strip()
+          version_encoded = quote(version, safe='')
           
           coverage_pct = ${{ steps.coverage.outputs.coverage_pct }}
+
+          # Replace release badge
+          release_pattern = r'<img src="https://img\.shields\.io/badge/release-[^"]+-blue"'
+          release_replacement = f'<img src="https://img.shields.io/badge/release-{version_encoded}-blue"'
+          content = re.sub(release_pattern, release_replacement, content)
           
           # Replace coverage badge
           pattern = r'<img src="https://img\.shields\.io/badge/coverage-\d+%25-green"'
@@ -59,7 +71,8 @@ jobs:
           with open('README.md', 'w', encoding='utf-8') as f:
               f.write(content)
           
-          print(f"Updated coverage badge to {coverage_pct}%")
+            print(f"Updated release badge to {version}")
+            print(f"Updated coverage badge to {coverage_pct}%")
           EOF
 
       - name: Commit and push badge updates
@@ -68,16 +81,14 @@ jobs:
           cd ..
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          if git diff --quiet && git diff --staged --quiet; then
+          git add README.md
+
+          if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git add README.md
-            git commit -m "ci: update coverage badge [skip ci]"
+            git commit -m "ci: update badges [skip ci]"
             git push
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run linter
         run: flake8 app tests
