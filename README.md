@@ -1,6 +1,6 @@
 <div align="center">
 
-# Falken Games
+# 🎮 Falken Games
 
 Plataforma de juegos web fullstack con backend en Python (FastAPI) y frontend en Vue 3. 6 juegos de un jugador optimizados para escritorio y móvil.
 
