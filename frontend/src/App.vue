@@ -132,7 +132,7 @@ onMounted(loadGames);
 <template>
   <main class="app-root">
     <header class="top-header">
-      <h1>Falken Games</h1>
+      <h1>🎮 Falken Games</h1>
       <p>6 mini-games, single player, browser-based</p>
     </header>
 
