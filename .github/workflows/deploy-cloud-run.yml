@@ -13,6 +13,7 @@ permissions:
 env:
   GCP_PROJECT_ID: falken-games
   GCP_REGION: europe-west1
+  GCS_STAGING_BUCKET: falken-games-build-staging
 
 jobs:
   deploy:
@@ -46,5 +47,6 @@ jobs:
         run: |
           gcloud builds submit \
             --project "$GCP_PROJECT_ID" \
+            --gcs-source-staging-dir "gs://$GCS_STAGING_BUCKET/source" \
             --config cloudbuild.yaml \
             --substitutions=_REGION="$GCP_REGION"
