@@ -4,11 +4,13 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from .store import ScoreStore
 
 app = FastAPI(title="Falken Games API", version="1.0.0")
+FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 
 app.add_middleware(
     CORSMiddleware,
@@ -98,3 +100,44 @@ def save_score(payload: ScoreIn) -> dict[str, str | int]:
     if not player_name:
         raise HTTPException(status_code=422, detail="Nombre de jugador invalido")
     return STORE.save_score(payload.game_id, player_name, payload.score)
+
+
+def _resolve_frontend_path(request_path: str) -> Path | None:
+    if not FRONTEND_DIST.exists():
+        return None
+
+    normalized_path = request_path.strip("/")
+    if not normalized_path:
+        index_file = FRONTEND_DIST / "index.html"
+        return index_file if index_file.is_file() else None
+
+    candidate = (FRONTEND_DIST / normalized_path).resolve()
+    try:
+        candidate.relative_to(FRONTEND_DIST.resolve())
+    except ValueError:
+        return None
+
+    if candidate.is_file():
+        return candidate
+
+    index_file = FRONTEND_DIST / "index.html"
+    return index_file if index_file.is_file() else None
+
+
+@app.get("/", include_in_schema=False)
+def serve_frontend_index() -> FileResponse:
+    frontend_file = _resolve_frontend_path("")
+    if frontend_file is None:
+        raise HTTPException(status_code=404, detail="Frontend no disponible")
+    return FileResponse(frontend_file)
+
+
+@app.get("/{full_path:path}", include_in_schema=False)
+def serve_frontend(full_path: str) -> FileResponse:
+    if full_path == "api" or full_path.startswith("api/"):
+        raise HTTPException(status_code=404, detail="Not Found")
+
+    frontend_file = _resolve_frontend_path(full_path)
+    if frontend_file is None:
+        raise HTTPException(status_code=404, detail="Frontend no disponible")
+    return FileResponse(frontend_file)

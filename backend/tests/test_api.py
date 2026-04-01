@@ -64,3 +64,60 @@ def test_scores_endpoint_returns_sorted_and_limited_results(client) -> None:
     payload = response.json()
     assert [item["player_name"] for item in payload] == ["P2", "P3"]
     assert [item["score"] for item in payload] == [42, 19]
+
+
+def test_root_serves_frontend_index_when_dist_exists(client, monkeypatch, tmp_path) -> None:
+    import app.main as main_module
+
+    dist_dir = tmp_path / "dist"
+    dist_dir.mkdir()
+    (dist_dir / "index.html").write_text("<html><body>Falken Games</body></html>", encoding="utf-8")
+    monkeypatch.setattr(main_module, "FRONTEND_DIST", dist_dir)
+
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert "Falken Games" in response.text
+
+
+def test_frontend_asset_is_served_when_file_exists(client, monkeypatch, tmp_path) -> None:
+    import app.main as main_module
+
+    dist_dir = tmp_path / "dist"
+    dist_dir.mkdir()
+    (dist_dir / "index.html").write_text("<html><body>Index</body></html>", encoding="utf-8")
+    (dist_dir / "background.jpg").write_text("fake-image", encoding="utf-8")
+    monkeypatch.setattr(main_module, "FRONTEND_DIST", dist_dir)
+
+    response = client.get("/background.jpg")
+
+    assert response.status_code == 200
+    assert response.text == "fake-image"
+
+
+def test_unknown_frontend_route_returns_index_for_spa(client, monkeypatch, tmp_path) -> None:
+    import app.main as main_module
+
+    dist_dir = tmp_path / "dist"
+    dist_dir.mkdir()
+    (dist_dir / "index.html").write_text("<html><body>SPA shell</body></html>", encoding="utf-8")
+    monkeypatch.setattr(main_module, "FRONTEND_DIST", dist_dir)
+
+    response = client.get("/games/snake")
+
+    assert response.status_code == 200
+    assert "SPA shell" in response.text
+
+
+def test_unknown_api_route_keeps_api_404_response(client, monkeypatch, tmp_path) -> None:
+    import app.main as main_module
+
+    dist_dir = tmp_path / "dist"
+    dist_dir.mkdir()
+    (dist_dir / "index.html").write_text("<html><body>SPA shell</body></html>", encoding="utf-8")
+    monkeypatch.setattr(main_module, "FRONTEND_DIST", dist_dir)
+
+    response = client.get("/api/unknown")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Not Found"}

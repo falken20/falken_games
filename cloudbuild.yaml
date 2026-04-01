@@ -1,0 +1,38 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - gcr.io/$PROJECT_ID/falken-games
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - gcr.io/$PROJECT_ID/falken-games
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE_NAME}
+      - --image
+      - gcr.io/$PROJECT_ID/falken-games
+      - --platform
+      - managed
+      - --region
+      - ${_REGION}
+      - --allow-unauthenticated
+      - --project
+      - $PROJECT_ID
+
+images:
+  - gcr.io/$PROJECT_ID/falken-games
+
+substitutions:
+  _SERVICE_NAME: falken-games
+  _REGION: europe-west1
+
+options:
+  logging: CLOUD_LOGGING_ONLY
